@@ -58,28 +58,32 @@ def intrude(node, offer, excludes=None):
             first_inline = True
             was_block = False
 
-        for child in offer.get_child(node):
-            child_has_content = False
-            child_tag = offer.get_tag_name(child)
-            is_block = child_tag in BLOCK_ELEMENTS
+            for child in offer.get_child(node):
+                child_has_content = False
+                child_tag = offer.get_tag_name(child)
 
-            for text in secret_visits(child, excludes, list_type):
-                if not child_has_content:
-                    child_has_content = True
-                    node_has_content = True
+                if child_tag in excludes:
+                    continue
 
-                    if is_block:
-                        if not was_block and not first_inline:
-                            yield '\n'
-                        first_inline = True
-                    elif first_inline:
-                        first_inline = False
-                    else:
-                        yield ' '
+                is_block = child_tag in BLOCK_ELEMENTS
 
-                    was_block = is_block
+                for text in secret_visits(child, excludes, list_type):
+                    if not child_has_content:
+                        child_has_content = True
+                        node_has_content = True
 
-                yield text
+                        if is_block:
+                            if not was_block and not first_inline:
+                                yield '\n'
+                            first_inline = True
+                        elif first_inline:
+                            first_inline = False
+                        else:
+                            yield ' '
+
+                        was_block = is_block
+
+                    yield text
 
         if tag in BLOCK_ELEMENTS:
             if node_has_content:
