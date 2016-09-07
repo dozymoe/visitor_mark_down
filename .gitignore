@@ -3,6 +3,12 @@
 *.orig
 
 
+## pypi
+
+/dist/
+/visitor_mark_down.egg-info/
+
+
 ## python
 
 __pycache__/
